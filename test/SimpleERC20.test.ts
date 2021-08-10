@@ -40,4 +40,9 @@ describe('SimpleERC20', function () {
       .to.emit(SimpleERC20, 'Transfer')
       .withArgs(simpleERC20Beneficiary.address, users[1].address, 1);
   });
+
+  it('should return the correct name', async function () {
+    const {SimpleERC20} = await setup();
+    expect(await SimpleERC20.name()).to.equal('Simple ERC20');
+  });
 });
