@@ -112,4 +112,27 @@ describe('PaymentSplitter', () => {
       )
     ).to.be.revertedWith('PaymentSplitter: account already has shares');
   });
+
+  it('should receive payment correctly', async () => {
+    const [deployer, account1] = await ethers.getSigners();
+    const PaymentSplitterFactory = await ethers.getContractFactory(
+      'PaymentSplitter'
+    );
+    const paymentSplitterInstance = await PaymentSplitterFactory.connect(
+      deployer
+    ).deploy([account1.address], [1]);
+
+    await paymentSplitterInstance.deployed();
+
+    expect(paymentSplitterInstance.address).to.not.be.null;
+
+    await deployer.sendTransaction({
+      to: paymentSplitterInstance.address,
+      value: ethers.utils.parseEther('1'),
+    });
+    const balance = await ethers.provider.getBalance(
+      paymentSplitterInstance.address
+    );
+    expect(ethers.utils.formatEther(balance.toString())).to.equal('1.0');
+  });
 });
