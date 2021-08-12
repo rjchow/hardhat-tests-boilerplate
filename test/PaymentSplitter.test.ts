@@ -43,4 +43,31 @@ describe('PaymentSplitter', () => {
       )
     ).to.be.revertedWith('PaymentSplitter: payees and shares length mismatch');
   });
+
+  it('should fail to deploy if the payees array is empty', async () => {
+    const [deployer] = await ethers.getSigners();
+    const PaymentSplitterFactory = await ethers.getContractFactory(
+      'PaymentSplitter'
+    );
+
+    // deploy the payment splitter with empty arrays
+    await expect(
+      PaymentSplitterFactory.connect(deployer).deploy([], [])
+    ).to.be.revertedWith('PaymentSplitter: no payees');
+  });
+
+  it('should fail to deploy if there are more payees than shares', async () => {
+    const [deployer, account1, account2] = await ethers.getSigners();
+    const PaymentSplitterFactory = await ethers.getContractFactory(
+      'PaymentSplitter'
+    );
+
+    // deploy the payment splitter with 1 user but two items in the shares array
+    await expect(
+      PaymentSplitterFactory.connect(deployer).deploy(
+        [account1.address, account2.address],
+        [1]
+      )
+    ).to.be.revertedWith('PaymentSplitter: payees and shares length mismatch');
+  });
 });
