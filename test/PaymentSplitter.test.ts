@@ -345,7 +345,7 @@ describe('PaymentSplitter', () => {
     );
     const account1Profit2 = account1NewBalance2.sub(account1NewBalance);
     expect(ethers.utils.formatEther(account1Profit2.toString())).to.equal(
-      '0.5'
+      '0.2'
     );
   });
 });
